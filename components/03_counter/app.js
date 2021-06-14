@@ -1,8 +1,7 @@
-// constant
-
 // doms
 
-const $counterContainer = document.querySelector('.container');
+const $increaseButton = document.querySelector('.increase');
+const $decreaseButton = document.querySelector('.decrease');
 const $counterDisplay = document.querySelector('.counter');
 
 // utility
@@ -24,13 +23,17 @@ const counter = (() => {
 const increaseCounter = () => {
   $counterDisplay.textContent = counter.increase();
 };
+
 const decreaseCounter = () => {
   $counterDisplay.textContent = counter.decrease();
 };
 
 // Event Listener
 
-$counterContainer.addEventListener('click', e => {
-  if (e.target.matches('.container > .increase, .increase > i')) increaseCounter();
-  if (e.target.matches('.container > .decrease, .decrease > i')) decreaseCounter();
+$increaseButton.addEventListener('click', () => {
+  increaseCounter();
+});
+
+$decreaseButton.addEventListener('click', () => {
+  decreaseCounter();
 });
