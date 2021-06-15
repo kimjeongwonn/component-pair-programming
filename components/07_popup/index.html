@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Popup</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::after,
+      *::before {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Open Sans';
+        font-weight: 300;
+        padding: 0;
+        margin: 0;
+      }
+      body.overlay::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        z-index: 1;
+      }
+      .title {
+        color: #db5b33;
+        font-weight: 300;
+        text-align: center;
+      }
+      /* 팝업을 위한 CSS */
+      .popup-modal {
+        position: fixed;
+        display: none;
+        max-width: 520px;
+        min-height: 200px;
+        left: 50%;
+        top: 20vh;
+        transform: translate3d(-50%, 0, 0);
+        border-radius: 5px;
+        padding: 20px 50px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        z-index: 1;
+      }
+
+      .close-modal {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        border: none;
+        background-color: transparent;
+        -webkit-appearance: none;
+        -webkit-border-radius: 0;
+      }
+      .close-modal:active {
+        color: black;
+      }
+
+      .popup-modal.active {
+        display: block;
+      }
+    </style>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <h1 class="title">Popup</h1>
+
+    <!-- 팝업을 위한 HTML -->
+    <button class="toggle-btn">Toggle Popup</button>
+
+    <!-- from popup : ~~~ 나오는거 -->
+    <p class="popup-message"></p>
+
+    <section class="popup-modal">
+      <h2 class="title">Hello!</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium
+        rerum tempore aperiam atque exercitationem cupiditate sequi?
+      </p>
+      <form class="popup-form" action="#">
+        <input type="text" class="popup-input" />
+        <button type="submit" class="submit-btn">OK</button>
+        <button type="button" class="cancel-btn">Cancel</button>
+      </form>
+      <button class="close-modal">𝗫</button>
+    </section>
+  </body>
+</html>
