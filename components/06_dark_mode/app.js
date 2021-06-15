@@ -18,8 +18,9 @@ const isSystemThemeDark = () =>
   window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 const fetchTheme = () => {
-  const localTheme = localStorage.getItem('theme');
-  setTheme(localTheme || (isSystemThemeDark() ? 'dark' : 'light'));
+  setTheme(
+    localStorage.getItem('theme') || (isSystemThemeDark() ? 'dark' : 'light')
+  );
 };
 
 fetchTheme();
