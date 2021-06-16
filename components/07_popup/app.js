@@ -9,22 +9,21 @@ const isCancelable = e =>
   e.target.classList.contains('cancel-btn') ||
   e.target.classList.contains('close-modal');
 
-const closeModal = () => {
+const closeModal = willRemoveEventHandler => {
   $popupModal.classList.remove('active');
   document.body.classList.remove('overlay');
-  document.removeEventListener('click', cancelModalHandler);
+  document.removeEventListener('click', willRemoveEventHandler);
+};
+
+const cancelModalHandler = e => {
+  if (!isCancelable(e)) return;
+  closeModal(cancelModalHandler);
 };
 
 const writeMessage = content => {
   $popupMessage.textContent = content;
   $popupInput.value = '';
-  closeModal();
-};
-
-const cancelModalHandler = e => {
-  console.log('??');
-  if (!isCancelable(e)) return;
-  closeModal();
+  closeModal(cancelModalHandler);
 };
 
 const submitHandler = e => {
