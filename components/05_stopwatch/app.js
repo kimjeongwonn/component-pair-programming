@@ -84,7 +84,7 @@ const resetTimer = () => {
   setLaps([]);
 };
 
-const recoardLap = () => {
+const recordLap = () => {
   setLaps([...laps, $timerDisplay.textContent]);
 };
 
@@ -93,7 +93,7 @@ $leftButton.addEventListener('click', () => {
 });
 
 $rightButton.addEventListener('click', () => {
-  if (timerId) recoardLap();
+  if (timerId) recordLap();
   else resetTimer();
 });
 
