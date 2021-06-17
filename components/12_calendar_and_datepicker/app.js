@@ -16,15 +16,14 @@ const MONTH = [
 const DAY = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
 let currentDate;
-let selectedDate;
 
 const $calendar = document.querySelector('.calendar');
 const $datePicker = document.querySelector('.date-picker');
 
 const updateDatePickerValue = () => {
-  $datePicker.value = `${currentDate.year}-${
-    currentDate.month + 1
-  }-${selectedDate}`;
+  $datePicker.value = `${currentDate.year}-${currentDate.month + 1}-${
+    currentDate.date
+  }`;
 };
 
 const createCalenderElement = () => {
@@ -72,7 +71,7 @@ const getDateArray = () => {
   const { year, month } = currentDate;
   const firstDay = new Date(year, month, 1).getDay();
   const prevMonthLastDate = new Date(year, month, 0).getDate();
-  const currMonthLastDate = new Date(year, month, 0).getDate();
+  const currMonthLastDate = new Date(year, month + 1, 0).getDate();
   const firstCalendarDate = new Date(year, month, -firstDay).getDate();
   const prevMonthArray = Array.from(
     { length: prevMonthLastDate },
@@ -92,16 +91,10 @@ const getDateArray = () => {
   return { prevMonthArray, currMonthArray, nextMonthArray };
 };
 
-const setSelectedDate = _selectedDate => {
-  selectedDate = _selectedDate;
-};
-
-const selectDate = date => {
-  document.querySelector('.date.selected')?.classList.remove('selected');
-  console.log(document.querySelector('.date.selected'));
-  setSelectedDate(date);
-  [...document.querySelectorAll('.date:not(.disable)')].forEach($date => {
-    if (+date.textContent === selectedDate) $date.classList.add('selected');
+const checkCurrentDate = () => {
+  document.querySelector('.date.selected').classList.remove('selected');
+  document.querySelectorAll('.date:not(.disable)').forEach($date => {
+    $date.classList.toggle('selected', +$date.textContent === currentDate.date);
   });
 };
 
@@ -130,16 +123,10 @@ const render = () => {
   currMonthArray.forEach(date => {
     const $dateDiv = document.createElement('div');
     $dateDiv.className = isToday(date) ? 'date today' : 'date';
-    if (date === selectedDate) selectDate(date);
+    $dateDiv.classList.toggle('selected', date === currentDate.date);
     $dateDiv.textContent = date;
     $calendarGrid.append($dateDiv);
   });
-
-  // TODO: 마지막 요소 선택하는거 리팩토링
-  // if (!currMonthArray.find(date => date === selectedDate)) {
-  //   const ableDates = $calendarGrid.querySelectorAll('.date:not(.disable)');
-  //   ableDates[ableDates.length - 1].classList.add('selected');
-  // }
 
   nextMonthArray.forEach(date => {
     const $dateDiv = document.createElement('div');
@@ -149,41 +136,60 @@ const render = () => {
   });
 
   $calendar.innerHTML = '';
-  $calendar.append($calendarFragment);
-};
 
-const setCurrentDate = _currentDate => {
-  currentDate = _currentDate;
-  render();
-
-  document.querySelector('.prev-btn').addEventListener('click', () => {
-    const prevDate = new Date(currentDate.year, currentDate.month - 1);
-    setCurrentDate({
+  $calendarFragment.querySelector('.prev-btn').addEventListener('click', () => {
+    const prevMonthLastDate = new Date(
+      currentDate.year,
+      currentDate.month,
+      0
+    ).getDate();
+    const prevDate = new Date(
+      currentDate.year,
+      currentDate.month - 1,
+      currentDate.date > prevMonthLastDate
+        ? prevMonthLastDate
+        : currentDate.date
+    );
+    currentDate = {
       year: prevDate.getFullYear(),
       month: prevDate.getMonth(),
       date: prevDate.getDate()
-    });
+    };
+    render();
   });
 
-  document.querySelector('.next-btn').addEventListener('click', () => {
-    const nextDate = new Date(currentDate.year, currentDate.month + 1);
-    setCurrentDate({
+  $calendarFragment.querySelector('.next-btn').addEventListener('click', () => {
+    const nextMonthLastDate = new Date(
+      currentDate.year,
+      currentDate.month + 2,
+      0
+    ).getDate();
+    const nextDate = new Date(
+      currentDate.year,
+      currentDate.month + 1,
+      currentDate.date > nextMonthLastDate
+        ? nextMonthLastDate
+        : currentDate.date
+    );
+    currentDate = {
       year: nextDate.getFullYear(),
       month: nextDate.getMonth(),
       date: nextDate.getDate()
-    });
+    };
+    render();
   });
+
+  $calendar.append($calendarFragment);
 };
 
 const fetchCalendar = () => {
   const today = new Date();
-  selectedDate = today.getDate();
-  setCurrentDate({
+  currentDate = {
     year: today.getFullYear(),
     month: today.getMonth(),
     date: today.getDate()
-  });
-  selectDate(today.getDate());
+  };
+  render();
 };
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -192,6 +198,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
 $datePicker.addEventListener('focus', () => {
   document.querySelector('.calendar').classList.add('active');
+  document.addEventListener('click', function closeCalendarHandler(e) {
+    if (
+      e.target.matches('.disable, .calendar-nav, .calendar-nav *, .date-picker')
+    )
+      return;
+    document.querySelector('.calendar').classList.remove('active');
+    document.removeEventListener('click', closeCalendarHandler);
+  });
 });
 
 $calendar.addEventListener('click', e => {
@@ -202,9 +216,12 @@ $calendar.addEventListener('click', e => {
     return;
 
   if (e.target.matches('.date:not(.disable)')) {
-    selectDate(e.target.textContent);
+    currentDate = {
+      year: currentDate.year,
+      month: currentDate.month,
+      date: +e.target.textContent
+    };
   }
   updateDatePickerValue();
+  checkCurrentDate();
 });
-
-// TODO: 선택한 날짜 띄우기

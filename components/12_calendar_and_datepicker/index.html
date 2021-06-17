@@ -30,47 +30,109 @@
       }
       .calendar {
         --calender-size: 300px;
-        font-size: calc(var(--calender-size) * 0.064);
         width: var(--calender-size);
+        font-size: calc(var(--calender-size) * 0.046);
+        --cell-size: calc(((var(--calender-size) - 1.2em) / 7));
+        --theme-color: rgb(74, 207, 97);
         text-align: center;
         display: none;
+        border-radius: 0.5em;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
       }
       .calendar.active {
         display: block;
       }
       .calendar-nav {
         display: flex;
-        /* flex-direction: row; */
         justify-content: space-between;
+        padding: 1em;
+        background-color: var(--theme-color);
+        color: white;
+      }
+      .calendar h2 {
+        font-size: 1.2em;
+        padding: 0;
+        margin: 0;
+      }
+      .calendar h3 {
+        font-size: 0.8em;
+        padding: 0;
+        margin: 0;
       }
       .calendar-grid {
         display: grid;
-        grid: repeat(7, 1fr) / repeat(7, 1fr);
+        grid-template-columns: repeat(7, 1fr);
+        justify-items: stretch;
+        padding: 0.6em;
       }
-      .calendar-title {
+      .calendar-grid div {
+        display: inline-block;
+        height: var(--cell-size);
+        line-height: var(--cell-size);
+      }
+
+      .date {
+        position: relative;
+        transition: color 0.4s;
+        cursor: pointer;
+      }
+
+      .date::before {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        background-color: var(--theme-color);
+        width: var(--cell-size);
+        height: var(--cell-size);
+        border-radius: calc(((var(--calender-size) - 1.2em) / 7) / 2);
+        transition: opacity 0.4s;
+        z-index: -1;
+      }
+
+      .calendar .calendar-grid .date:hover {
+        color: white;
+      }
+      .date:hover::before {
+        opacity: 1;
       }
 
       .date.disable {
-        color: gray;
+        color: #bbb;
       }
       .date:nth-child(7n + 1):not(.disable) {
         color: red;
       }
-      .today {
-        color: green;
+      .today:after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: var(--cell-size);
+        height: var(--cell-size);
+        border-radius: calc(((var(--calender-size) - 1.2em) / 7) / 2);
+        border: 1px solid var(--theme-color);
       }
       .selected {
-        border: 2px solid green;
+        color: white;
+        /* z-index: 1; */
+      }
+      .selected::before {
+        opacity: 1;
       }
       .btn {
         border: none;
+        color: inherit;
         background-color: transparent;
         font-size: 1.5em;
       }
       .btn:active {
         color: inherit;
       }
-      /* 뷰를 구현하세요. */
     </style>
     <script src="./app.js" defer></script>
   </head>
@@ -80,13 +142,3 @@
     <div class="calendar"></div>
   </body>
 </html>
-
-<!-- 
-const setSelectedDate = _selectedDate => {
-  document.querySelector('.date.selected')?.classList.remove('selected');
-  selectedDate = _selectedDate;
-  [...document.querySelectorAll('.date:not(.disable)')].forEach($date => {
-    if ($date.textContent === selectedDate) $date.classList.add('selected');
-  });
-};
- -->
