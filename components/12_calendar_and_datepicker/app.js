@@ -20,10 +20,13 @@ let currentDate;
 const $calendar = document.querySelector('.calendar');
 const $datePicker = document.querySelector('.date-picker');
 
+const getFormatedDate = () =>
+  `${currentDate.year}-${('0' + (currentDate.month + 1)).slice(-2)}-${(
+    '0' + currentDate.date
+  ).slice(-2)}`;
+
 const updateDatePickerValue = () => {
-  $datePicker.value = `${currentDate.year}-${currentDate.month + 1}-${
-    currentDate.date
-  }`;
+  $datePicker.value = getFormatedDate();
 };
 
 const createCalenderElement = () => {
@@ -34,11 +37,11 @@ const createCalenderElement = () => {
 
   const $prevBtn = document.createElement('button');
   $prevBtn.className = 'btn prev-btn';
-  $prevBtn.innerHTML = '&ltrif;';
+  $prevBtn.innerHTML = '◀';
 
   const $nextBtn = document.createElement('button');
   $nextBtn.className = 'btn next-btn';
-  $nextBtn.innerHTML = '&rtrif;';
+  $nextBtn.innerHTML = '▶';
 
   const $calenderTitle = document.createElement('div');
   $calenderTitle.className = 'calendar-title';
@@ -83,7 +86,7 @@ const getDateArray = () => {
   );
   const nextMonthArray = Array.from(
     {
-      length: 7 - ((prevMonthArray.length + currMonthLastDate) % 7)
+      length: 7 - ((prevMonthArray.length + currMonthLastDate) % 7 || 7)
     },
     (_, index) => index + 1
   );
