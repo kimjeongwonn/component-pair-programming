@@ -1,11 +1,11 @@
-//TODO: 동적으로 캐러셀 관리
+const DURATION = 500;
 
 let currentSlide = 1;
 let slideLength = 0;
 
 const setCurrentSlide = _currentSlide => {
   const $carouselSlides = document.querySelector('.carousel-slides');
-  $carouselSlides.style.setProperty('--duration', '500');
+  $carouselSlides.style.setProperty('--duration', DURATION);
 
   currentSlide = _currentSlide;
   $carouselSlides.style.setProperty('--currentSlide', currentSlide + '');
@@ -20,6 +20,17 @@ const setCurrentSlide = _currentSlide => {
   }
 };
 
+const throttle = (() => {
+  let timerId = null;
+  return (callback, ...args) => {
+    if (timerId) return;
+    callback(...args);
+    timerId = setTimeout(() => {
+      timerId = null;
+    }, DURATION + 50);
+  };
+})();
+
 const createCarouselSlides = _images => {
   const images = [_images[_images.length - 1], ..._images, _images[0]];
   slideLength = images.length;
@@ -28,7 +39,7 @@ const createCarouselSlides = _images => {
   const $carouselSlides = document.createElement('div');
   $carouselSlides.classList.add('carousel-slides');
   $carouselSlides.style.setProperty('--currentSlide', '1');
-  $carouselSlides.style.setProperty('--duration', '500');
+  $carouselSlides.style.setProperty('--duration', DURATION + '');
 
   const $prevButton = document.createElement('button');
   $prevButton.classList.add('carousel-control');
@@ -36,7 +47,7 @@ const createCarouselSlides = _images => {
   $prevButton.innerHTML = '&laquo;';
 
   $prevButton.addEventListener('click', () => {
-    setCurrentSlide(currentSlide - 1);
+    throttle(setCurrentSlide, currentSlide - 1);
   });
 
   const $nextButton = document.createElement('button');
@@ -45,7 +56,7 @@ const createCarouselSlides = _images => {
   $nextButton.innerHTML = '&raquo;';
 
   $nextButton.addEventListener('click', () => {
-    setCurrentSlide(currentSlide + 1);
+    throttle(setCurrentSlide, currentSlide + 1);
   });
 
   images.forEach(url => {
