@@ -13,7 +13,7 @@ const counter = (() => {
       return ++count;
     },
     decrease() {
-      return count > 0 ? --count : 0;
+      return count && --count;
     }
   };
 })();
