@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar</title>
+    <!-- 원하는 폰트와 아이콘을 사용해도 좋다. -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::after,
+      *::before {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Open Sans';
+        font-weight: 300;
+      }
+      .title {
+        color: #db5b33;
+        font-weight: 300;
+        text-align: center;
+      }
+      .calendar {
+        --calender-size: 300px;
+        font-size: calc(var(--calender-size) * 0.064);
+        width: var(--calender-size);
+        text-align: center;
+        display: none;
+      }
+      .calendar.active {
+        display: block;
+      }
+      .calendar-nav {
+        display: flex;
+        /* flex-direction: row; */
+        justify-content: space-between;
+      }
+      .calendar-grid {
+        display: grid;
+        grid: repeat(7, 1fr) / repeat(7, 1fr);
+      }
+      .calendar-title {
+      }
+
+      .date.disable {
+        color: gray;
+      }
+      .date:nth-child(7n + 1):not(.disable) {
+        color: red;
+      }
+      .today {
+        color: green;
+      }
+      .selected {
+        border: 2px solid green;
+      }
+      .btn {
+        border: none;
+        background-color: transparent;
+        font-size: 1.5em;
+      }
+      .btn:active {
+        color: inherit;
+      }
+      /* 뷰를 구현하세요. */
+    </style>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <h1 class="title">Calender</h1>
+    <input type="text" class="date-picker" placeholder="select date" readonly />
+    <div class="calendar"></div>
+  </body>
+</html>
+
+<!-- 
+const setSelectedDate = _selectedDate => {
+  document.querySelector('.date.selected')?.classList.remove('selected');
+  selectedDate = _selectedDate;
+  [...document.querySelectorAll('.date:not(.disable)')].forEach($date => {
+    if ($date.textContent === selectedDate) $date.classList.add('selected');
+  });
+};
+ -->
